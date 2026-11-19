@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LooksAI – Personal grooming and style advice</title>
+  <link rel="stylesheet" href="effects.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="splash" aria-hidden="true">
+    <div class="splash-logo">Looks<span>AI</span></div>
+    <div class="splash-bar"></div>
+  </div>
+  <header class="nav">
+    <a class="logo" href="#top">Looks<span>AI</span></a>
+    <nav>
+      <a href="#what">What you get</a>
+      <a href="#products">Products</a>
+      <a href="#how">How it works</a>
+      <a href="#privacy">Privacy</a>
+      <a class="nav-cta" href="#upload">Try it</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-text">
+        <h1>Your face has a best haircut. Let's find it.</h1>
+        <p class="lead">Upload one selfie. We measure your face shape and proportions, then give you a hair, skin, and grooming plan you can start this week.</p>
+        <ul class="ticks">
+          <li>Advice built around your face, not generic tips</li>
+          <li>Only things you can change: hair, skin, grooming, style</li>
+          <li>Photo is analyzed in your browser first</li>
+        </ul>
+      </div>
+
+      <div class="scan-card" id="upload">
+        <div class="frame" id="dropzone" tabindex="0" role="button" aria-label="Upload a selfie">
+          <div id="placeholder" class="placeholder">
+            <svg viewBox="0 0 200 240" aria-hidden="true">
+              <ellipse cx="100" cy="115" rx="62" ry="82" class="outline" />
+              <path d="M40 115h120M100 33v164" class="guide" />
+              <g class="dots">
+                <circle cx="72" cy="95" r="3.5" /><circle cx="128" cy="95" r="3.5" />
+                <circle cx="100" cy="125" r="3.5" /><circle cx="78" cy="160" r="3.5" />
+                <circle cx="122" cy="160" r="3.5" /><circle cx="100" cy="185" r="3.5" />
+                <circle cx="48" cy="115" r="3.5" /><circle cx="152" cy="115" r="3.5" />
+              </g>
+            </svg>
+            <p class="dz-title">Drop a selfie or click to upload</p>
+            <p class="dz-sub">JPG, PNG or WebP</p>
+          </div>
+          <img id="preview" alt="Your selfie preview" hidden />
+          <div class="scanline" aria-hidden="true"></div>
+          <input id="fileInput" type="file" accept="image/*" hidden />
+        </div>
+
+        <p class="tips">Best results: face the camera, even light, no filters, hair off your forehead. When you analyze, a resized copy of your photo is sent to the AI to write your advice. This site doesn't store it.</p>
+        <button id="analyzeBtn" class="btn" disabled>Analyze my face</button>
+        <button id="resetBtn" class="text-btn" hidden>Use a different photo</button>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section id="results" class="results" hidden>
+      <div class="wrap">
+        <h2>Your plan</h2>
+        <p class="note">Measurements come from your photo. The advice is written by AI from your photo and those measurements.</p>
+        <div class="strengths">
+          <div class="strengths-head">
+            <h3>Your strengths</h3>
+            <div class="score" aria-label="Presentation score out of 10">
+              <span class="score-num" id="scoreNum">-</span><span class="score-of">/10</span>
+            </div>
+          </div>
+          <p class="score-note">Rough AI estimate of your grooming, hairstyle and style only. It doesn't rate your face. Lighting, angle and camera change it a lot, and it says nothing about your worth.</p>
+          <div class="score-cards" id="scoreCards"></div>
+          <ul id="strengthList"></ul>
+          <p class="win"><strong>Biggest quick win:</strong> <span id="biggestWin">-</span></p>
+        </div>
+        <div class="result-grid">
+          <div class="measure">
+            <h3>Face measurements</h3>
+            <dl>
+              <dt>Face shape</dt><dd id="mShape">-</dd>
+              <dt>Jaw width</dt><dd id="mJaw">-</dd>
+              <dt>Forehead</dt><dd id="mForehead">-</dd>
+              <dt>Eye spacing</dt><dd id="mEyes">-</dd>
+            </dl>
+          </div>
+          <div class="advice">
+            <article><h3>Hair</h3><p id="advHair">-</p></article>
+            <article><h3>Skin</h3><p id="advSkin">-</p></article>
+            <article><h3>Grooming</h3><p id="advGrooming">-</p></article>
+            <article><h3>Style</h3><p id="advStyle">-</p></article>
+            <article class="skincheck">
+              <h3>Skin check</h3>
+              <p><strong>What's visible:</strong> <span id="skinSeen">-</span></p>
+              <p><strong>Routine:</strong> <span id="skinRoutine">-</span></p>
+              <p><strong>See a doctor if:</strong> <span id="skinDoctor">-</span></p>
+              <p class="disclaimer">General skincare guidance from a photo. It is not a medical diagnosis.</p>
+            </article>
+            <article class="products">
+              <h3>Skincare to look for</h3>
+              <ul id="productList"></ul>
+              <p class="disclaimer">Patch test new products on your inner arm first, and add one at a time. Ask a pharmacist or dermatologist if you're unsure.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="what" class="what">
+      <div class="wrap">
+        <h2>What you get</h2>
+        <dl class="rows">
+          <div><dt>Face shape reading</dt><dd>Landmark measurements turned into plain-language results.</dd></div>
+          <div><dt>Hairstyle and beard picks</dt><dd>Cuts and lengths that work with your proportions.</dd></div>
+          <div><dt>Skincare routine</dt><dd>A short morning and night routine, matched to your skin concerns.</dd></div>
+          <div><dt>Grooming details</dt><dd>Brows, facial hair, and small fixes that change how a face reads.</dd></div>
+          <div><dt>Style direction</dt><dd>Colors, collars, and fits that suit your features.</dd></div>
+          <div><dt>Progress tracking</dt><dd>Compare photos over weeks and see what's working.</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section id="products" class="products-sec">
+      <div class="wrap">
+        <h2>What to use, and when</h2>
+        <p class="sec-lead">Tap your situation to see what to look for on the label. We list ingredients, not brands, so this works with whatever is sold near you.</p>
+
+        <div class="situations">
+          <details>
+            <summary>Oily skin</summary>
+            <dl>
+              <dt>Look for</dt><dd>A gel or foaming gentle cleanser, niacinamide (4 to 10%), an oil-free gel moisturizer, and a light gel or matte sunscreen.</dd>
+              <dt>How to use</dt><dd>Cleanse morning and night, then moisturizer, then sunscreen in the morning. Skipping moisturizer makes skin produce more oil, so keep it.</dd>
+              <dt>Avoid</dt><dd>Washing more than twice a day, harsh scrubs, and alcohol-heavy toners.</dd>
+            </dl>
+          </details>
+
+          <details>
+            <summary>Dry or flaky skin</summary>
+            <dl>
+              <dt>Look for</dt><dd>A creamy, fragrance-free cleanser, hyaluronic acid, a ceramide moisturizer, and a cream sunscreen.</dd>
+              <dt>How to use</dt><dd>Apply hyaluronic acid to slightly damp skin, then seal it in with moisturizer right away. Use lukewarm water.</dd>
+              <dt>Avoid</dt><dd>Hot water, strong foaming cleansers, and exfoliating more than once or twice a week.</dd>
+            </dl>
+          </details>
+
+          <details>
+            <summary>Acne and breakouts</summary>
+            <dl>
+              <dt>Look for</dt><dd>Salicylic acid (0.5 to 2%) in a cleanser or leave-on, benzoyl peroxide (2.5 to 5%) as a spot treatment, and an oil-free moisturizer labelled non-comedogenic.</dd>
+              <dt>How to use</dt><dd>Start with one active only, every second day, then build up. Benzoyl peroxide can bleach towels and pillowcases.</dd>
+              <dt>Avoid</dt><dd>Picking spots, using several strong actives at once, and heavy oils on breakout-prone areas.</dd>
+              <dt>See a doctor</dt><dd>If acne is painful, deep, leaving scars, or hasn't improved after 8 to 12 weeks.</dd>
+            </dl>
+          </details>
+
+          <details>
+            <summary>Dark spots and uneven tone</summary>
+            <dl>
+              <dt>Look for</dt><dd>Vitamin C serum in the morning, niacinamide, azelaic acid, and a broad-spectrum SPF 50 sunscreen.</dd>
+              <dt>How to use</dt><dd>Sunscreen is the most important step, because sun exposure darkens spots again. Fading usually takes at least 8 to 12 weeks.</dd>
+              <dt>Avoid</dt><dd>Skipping sunscreen, scrubbing at marks, and "overnight whitening" products with unclear ingredients.</dd>
+            </dl>
+          </details>
+
+          <details>
+            <summary>Sensitive or red skin</summary>
+            <dl>
+              <dt>Look for</dt><dd>Fragrance-free products with ceramides or centella (cica), and a mineral sunscreen with zinc oxide.</dd>
+              <dt>How to use</dt><dd>Keep the routine to three steps: gentle cleanser, moisturizer, sunscreen. Add new products one at a time, two weeks apart.</dd>
+              <dt>Avoid</dt><dd>Fragrance, essential oils, and layering many actives.</dd>
+              <dt>See a doctor</dt><dd>If redness, burning, or itching is constant or keeps coming back.</dd>
+            </dl>
+          </details>
+
+          <details>
+            <summary>Daily sun protection</summary>
+            <dl>
+              <dt>Look for</dt><dd>A broad-spectrum sunscreen, SPF 30 to 50. Mineral (zinc oxide) suits sensitive skin, and chemical formulas often feel lighter.</dd>
+              <dt>How to use</dt><dd>Use about two finger-lengths for the face and neck, every morning, even on cloudy days. Reapply every two hours when outdoors.</dd>
+              <dt>Avoid</dt><dd>Relying on makeup with SPF alone, or using a tiny amount.</dd>
+            </dl>
+          </details>
+
+          <details>
+            <summary>Dark circles and puffy eyes</summary>
+            <dl>
+              <dt>Look for</dt><dd>Sunscreen around the eyes, a caffeine eye gel for puffiness, and a vitamin C or niacinamide eye product for pigment.</dd>
+              <dt>How to use</dt><dd>Dab gently with a ring finger and keep products off the lash line. Sleep and allergies matter as much as creams.</dd>
+              <dt>Avoid</dt><dd>Rubbing the area, and expecting creams to fix dark circles caused by genetics or the shape of the eye area.</dd>
+            </dl>
+          </details>
+
+          <details>
+            <summary>Dandruff and itchy scalp</summary>
+            <dl>
+              <dt>Look for</dt><dd>Anti-dandruff shampoo with zinc pyrithione, ketoconazole, selenium sulfide, or salicylic acid.</dd>
+              <dt>How to use</dt><dd>Lather and leave it on the scalp for 3 to 5 minutes, two or three times a week, then rinse well.</dd>
+              <dt>Avoid</dt><dd>Scratching, and heavy oils on a flaky scalp.</dd>
+              <dt>See a doctor</dt><dd>If it is severe, patchy, or doesn't improve after about a month.</dd>
+            </dl>
+          </details>
+
+          <details>
+            <summary>Beard itch and razor bumps</summary>
+            <dl>
+              <dt>Look for</dt><dd>A gentle shave gel, an alcohol-free aftershave with aloe, salicylic acid for bumps, and a light beard oil for dryness.</dd>
+              <dt>How to use</dt><dd>Shave after a warm wash, with the direction of hair growth, using a clean, sharp razor. Change blades often.</dd>
+              <dt>Avoid</dt><dd>Shaving very close, dry shaving, and picking at ingrown hairs.</dd>
+              <dt>See a doctor</dt><dd>If bumps become painful, filled with pus, or keep coming back.</dd>
+            </dl>
+          </details>
+        </div>
+
+        <p class="fine">General guidance only, not medical advice. Patch test any new product on your inner arm first, and ask a pharmacist or dermatologist if you are unsure, are pregnant, or take medication.</p>
+      </div>
+    </section>
+
+    <section id="how" class="how">
+      <div class="wrap">
+        <h2>How it works</h2>
+        <ol class="steps">
+          <li><h3>Upload a selfie</h3><p>One clear, front-facing photo is enough.</p></li>
+          <li><h3>We measure</h3><p>Facial landmarks give us real numbers: shape, jaw, spacing.</p></li>
+          <li><h3>AI writes your plan</h3><p>Those measurements guide advice you can act on.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="privacy" class="privacy">
+      <div class="wrap">
+        <h2>Your photo, your control</h2>
+        <p>Face photos are sensitive. Your selfie stays in your browser until you choose to analyze it, we ask for consent before anything is stored, and you can delete your data at any time.</p>
+        <p>LooksAI focuses on things you can improve, like skincare, hair, and grooming. Scores cover only grooming, hairstyle and style. It never rates your face or attractiveness.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span class="logo">Looks<span>AI</span></span>
+    <span>Advice is for guidance only and isn't medical or dermatological advice.</span>
+  </footer>
+
+  <script type="module" src="script.js"></script>
+  <script type="module" src="effects.js"></script>
+</body>
+</html>

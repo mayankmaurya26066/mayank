@@ -1,0 +1,38 @@
+/* LooksAI effects: cursor glow, face-scan overlay, before/after slider */
+
+/* ---------- cursor glow on glass cards ---------- */
+:is(.scan-card,.strengths,.advice article,.situations details,.rows>div,.steps li,.score-cards>*){position:relative}
+:is(.scan-card,.strengths,.measure,.advice article,.situations details,.rows>div,.steps li,.score-cards>*)::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;
+  background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(255,120,40,.17),transparent 70%);
+}
+:is(.scan-card,.strengths,.measure,.advice article,.situations details,.rows>div,.steps li,.score-cards>*):hover::after{opacity:1}
+@media (max-width:960px){.measure{position:relative}}
+
+/* ---------- face-scan overlay ---------- */
+#faceOverlay{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+
+/* ---------- before / after slider ---------- */
+.ba-sec{padding:70px 0 10px}
+.ba{
+  --pos:50%;position:relative;max-width:420px;aspect-ratio:5/6;margin:26px auto 0;
+  border-radius:var(--radius);overflow:hidden;border:1px solid var(--edge);
+  box-shadow:0 8px 32px rgba(0,0,0,.5);user-select:none;touch-action:pan-y;
+}
+.ba-layer{position:absolute;inset:0}
+.ba-layer svg,.ba-layer img{width:100%;height:100%;object-fit:cover;display:block}
+.ba-layer.before{clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
+.ba-tag{
+  position:absolute;top:14px;padding:5px 14px;border-radius:999px;font-size:.8rem;font-weight:700;
+  background:rgba(0,0,0,.45);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--edge);
+}
+.ba-tag.left{left:14px}.ba-tag.right{right:14px}
+.ba-handle{position:absolute;top:0;bottom:0;left:var(--pos);width:2px;transform:translateX(-1px);background:var(--grad);pointer-events:none}
+.ba-handle i{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:50px;height:50px;border-radius:50%;
+  display:grid;place-items:center;font-style:normal;font-weight:700;letter-spacing:2px;
+  background:var(--glass-strong);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.35);box-shadow:0 0 22px rgba(255,90,30,.55);
+}
+.ba:focus-within .ba-handle i{outline:2px solid #fff;outline-offset:3px}
+.ba-range{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize}
